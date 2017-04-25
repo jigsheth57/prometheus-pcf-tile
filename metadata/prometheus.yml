@@ -28,6 +28,21 @@ releases:
   version: "1.1.0"
   url: https://github.com/cloudfoundry-community/node-exporter-boshrelease/releases/download/v1.1.0/node-exporter-1.1.0.tgz
 
+form_types:
+- property_inputs:
+  - reference: ".alertmanager.api_url"
+    label: Slack API URL
+    description: The Slack webhook URL.
+  - reference: ".alertmanager.channel"
+    label: Slack Channel
+    description: The channel or user to send notifications to.
+  - reference: ".alertmanager.enable_send_resolved"
+    label: Enable send resolved notifications
+    description: Whether or not to notify about resolved alerts.
+  name: slack_notifications
+  label: Slack Notifications
+  description: Enable Slack notification for Alert Manager.
+
 job_types:
 - name: alertmanager
   resource_label: Alert Manager
@@ -35,6 +50,26 @@ job_types:
   templates:
     - name: alertmanager
       release: prometheus
+  property_blueprints:
+  - name: api_url
+    type: string
+    configurable: true
+    optional: false
+    unique: false
+    freeze_on_deploy: false
+  - name: channel
+    type: string
+    configurable: true
+    optional: false
+    unique: false
+    freeze_on_deploy: false
+  - name: enable_send_resolved
+    type: boolean
+    default: false
+    configurable: true
+    optional: false
+    unique: false
+    freeze_on_deploy: false
   resource_definitions:
   - name: ram
     type: integer
@@ -73,10 +108,33 @@ job_types:
     default: 1
   manifest: |
     alertmanager:
+      # The Slack webhook URL.
+      slack:
+        api_url: (( api_url.value ))
       route:
-        receiver: default-receiver
+        receiver: 'default-receiver'
+        # When a new group of alerts is created by an incoming alert, wait at
+        # least 'group_wait' to send the initial notification.
+        # This way ensures that you get multiple alerts for the same group that start
+        # firing shortly after another are batched together on the first
+        # notification.
+        group_wait: 30s
+        # When the first notification was sent, wait 'group_interval' to send a batch
+        # of new alerts that started firing for that group.
+        group_interval: 5m
+        # If an alert has successfully been sent, wait 'repeat_interval' to
+        # resend them.
+        repeat_interval: 4h
+        group_by: ['alertname', 'service']
       receivers:
-        - name: default-receiver
+        - name: 'default-receiver'
+          slack_configs:
+            # Whether or not to notify about resolved alerts.
+            - send_resolved: (( enable_send_resolved.value ))
+            # The channel or user to send notifications to.
+            - channel: '(( channel.value ))'
+            - title: '{{ .CommonAnnotations.summary }}'
+            - text: '{{ .CommonAnnotations.description }}'
 
 - name: prometheus
   resource_label: Prometheus
