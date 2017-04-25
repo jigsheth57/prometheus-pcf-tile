@@ -1,0 +1,9 @@
+releases:
+ - name: node-exporter
+   version: 1.1.0
+
+addons:
+  - name: node_exporter
+    jobs:
+      - name: node_exporter
+        release: node-exporter
