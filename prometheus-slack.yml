@@ -1,25 +1,119 @@
+---
+name: prometheus
+product_version: 17.6.1
+minimum_version_for_upgrade: 15.0.0
+label: Prometheus
 description: Prometheus with Grafana to monitor PCF
-form_types:
-- description: CF Deployment name required for route register.
-  label: ERT Info
-  name: cf_info
-  property_inputs:
-  - description: ERT Deployment Name.
-    label: ERT Deployment Name
-    reference: .nginx.cf_name
+metadata_version: '1.10'
+service_broker: false
+stemcell_criteria:
+  os: ubuntu-trusty
+  version: '3421'
+  enable_patch_security_updates: true
+requires_product_versions:
+- name: cf
+  version: "~> 1.8"
+- name: p-metrics
+  version: "~> 1.8"
+provides_product_versions:
+- name: prometheus
+  version: 17.6.1
+rank: 1
 icon_image: iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAYAAACI7Fo9AAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAABCRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOkNvbXByZXNzaW9uPjU8L3RpZmY6Q29tcHJlc3Npb24+CiAgICAgICAgIDx0aWZmOlhSZXNvbHV0aW9uPjcyPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjI1MDwvZXhpZjpQaXhlbFhEaW1lbnNpb24+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+MTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+MjUwPC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAg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3JPJOIFXxg4mPXB0H5Z25JIpo0UwjxyeXUnDdSf50MT+JnF2iOav1jHB/6uoPixnz+HwGQE4us8KxGpO64KSUtPkl1G4HKUfZ43P4vlhqr2X0XLSmsMd7S+dtnJrexZtgeokBODoSQD5JfqDuZPzjykouJgGzuTKtTlU25/itW10s+ynR3ivk+6Xgyavwc4vXpdA+vrg6Omzy2pOOc/d5EE5LXUO4+Iccr6J9Jsm3yk99pK0tfR5jaaqvjYuULIOj8eU8vVMGBzdM9R6FW278uSCvP3H0O4vYgr1ladSwRbTM/EQ1cAn0J/ASOrrH2djgWxuf9bz2UtpNtPMvS3MEJuEiG2Sb5G1yYMgEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABnxD4fyXa/OXh8SzBAAAAAElFTkSuQmCC
+
+releases:
+- name: prometheus
+  file: prometheus-17.6.1.tgz
+  version: 17.6.1
+  url: https://github.com/cloudfoundry-community/prometheus-boshrelease/releases/download/v17.6.1/prometheus-17.6.1.tgz
+- name: node-exporter
+  file: node-exporter-1.1.0.tgz
+  version: 1.1.0
+  url: https://github.com/cloudfoundry-community/node-exporter-boshrelease/releases/download/v1.1.0/node-exporter-1.1.0.tgz
+
+form_types:
+- property_inputs:
+  - reference: ".alertmanager.api_url"
+    label: Slack API URL
+    description: The Slack webhook URL.
+  - reference: ".alertmanager.channel"
+    label: Slack Channel
+    description: The channel or user to send notifications to.
+  - reference: ".alertmanager.enable_send_resolved"
+    label: Enable send resolved notifications
+    description: Whether or not to notify about resolved alerts.
+  name: slack_notifications
+  label: Slack Notifications
+  description: Enable Slack notification for Alert Manager.
+
 job_types:
-- description: Manages Alerts and Alert Rules from Prometheus
+- name: alertmanager
+  resource_label: Alert Manager
+  description: Manages Alerts and Alert Rules from Prometheus
+  templates:
+    - name: alertmanager
+      release: prometheus
+  property_blueprints:
+  - name: api_url
+    type: string
+    configurable: true
+    optional: false
+    unique: false
+    freeze_on_deploy: false
+  - name: channel
+    type: string
+    configurable: true
+    optional: false
+    unique: false
+    freeze_on_deploy: false
+  - name: enable_send_resolved
+    type: boolean
+    default: false
+    configurable: true
+    optional: false
+    unique: false
+    freeze_on_deploy: false
+  resource_definitions:
+  - name: ram
+    type: integer
+    configurable: true
+    default: 4096
+    constraints:
+      min: 2048
+  - name: ephemeral_disk
+    type: integer
+    configurable: true
+    default: 32768
+    constraints:
+      min: 16384
+  - name: persistent_disk
+    type: integer
+    configurable: true
+    default: 1024
+    constraints:
+      min: 1024
+      may_only_increase: true
+      error_message: Decreasing disk size not allowed
+  - name: cpu
+    type: integer
+    configurable: true
+    default: 2
+    constraints:
+      min: 1
+  static_ip: 0
   dynamic_ip: 1
+  max_in_flight: 100%
+  single_az_only: false
   errand: false
   instance_definition:
+    name: instances
     configurable: true
     default: 1
-    name: instances
   manifest: |
     alertmanager:
-      mesh:
-        password: (( alertmanager_mesh.value ))
+      # The Slack webhook URL.
+      slack:
+        api_url: (( api_url.value ))
       route:
         receiver: 'default-receiver'
         # When a new group of alerts is created by an incoming alert, wait at
@@ -37,55 +131,80 @@ job_types:
         group_by: ['alertname', 'service']
       receivers:
         - name: 'default-receiver'
-      test_alert:
-        daily: true
-      web:
-        external_url: https://alertmanager.(( ..cf.cloud_controller.system_domain.value ))
-  max_in_flight: 100%
-  name: alertmanager
-  property_blueprints:
-  - name: alertmanager_mesh
-    type: secret
+          slack_configs:
+            # Whether or not to notify about resolved alerts.
+            - send_resolved: (( enable_send_resolved.value ))
+            # The channel or user to send notifications to.
+            - channel: '(( channel.value ))'
+            - title: '{{ .CommonAnnotations.summary }}'
+            - text: '{{ .CommonAnnotations.description }}'
+
+- name: prometheus
+  resource_label: Prometheus
+  description: Prometheus and Exporters
+  templates:
+    - name: prometheus
+      release: prometheus
+    - name: bosh_alerts
+      release: prometheus
+    - name: cloudfoundry_alerts
+      release: prometheus
+    - name: mysql_alerts
+      release: prometheus
+    - name: probe_alerts
+      release: prometheus
+    - name: prometheus_alerts
+      release: prometheus
+    - name: bosh_exporter
+      release: prometheus
+    - name: cf_exporter
+      release: prometheus
+    - name: mysqld_exporter
+      release: prometheus
+    - name: firehose_exporter
+      release: prometheus
+    - name: collectd_exporter
+      release: prometheus
+    - name: pushgateway
+      release: prometheus
+    - name: statsd_exporter
+      release: prometheus
   resource_definitions:
-  - configurable: true
+  - name: ram
+    type: integer
+    configurable: true
+    default: 4096
     constraints:
       min: 2048
-    default: 2048
-    name: ram
+  - name: ephemeral_disk
     type: integer
-  - configurable: true
+    configurable: true
+    default: 32768
     constraints:
       min: 16384
-    default: 32768
-    name: ephemeral_disk
+  - name: persistent_disk
     type: integer
-  - configurable: true
+    configurable: true
+    default: 4096
     constraints:
-      error_message: Decreasing disk size not allowed
+      min: 2048
       may_only_increase: true
-      min: 1024
-    default: 1024
-    name: persistent_disk
+      error_message: Decreasing disk size not allowed
+  - name: cpu
     type: integer
-  - configurable: true
+    configurable: true
+    default: 2
     constraints:
       min: 1
-    default: 1
-    name: cpu
-    type: integer
-  resource_label: Alert Manager
-  single_az_only: false
   static_ip: 0
-  templates:
-  - name: alertmanager
-    release: prometheus
-- description: Prometheus and Exporters
   dynamic_ip: 1
+  max_in_flight: 100%
+  single_az_only: false
   errand: false
   instance_definition:
+    name: instances
     configurable: true
     default: 1
-    name: instances
   manifest: |
     prometheus:
       scrape_interval: 2m
@@ -94,9 +213,19 @@ job_types:
         local:
           engine: 'persisted'
       rule_files:
-        - /var/vcap/jobs/prometheus_alerts/*.alerts
-        - /var/vcap/jobs/bosh_alerts/*.alerts
-        - /var/vcap/jobs/cloudfoundry_alerts/*.alerts
+        - /var/vcap/jobs/bosh_alerts/bosh_jobs.alerts
+        - /var/vcap/jobs/bosh_alerts/bosh_processes.alerts
+        - /var/vcap/jobs/bosh_alerts/bosh_system.alerts
+        - /var/vcap/jobs/bosh_alerts/prometheus_bosh_exporter.alerts
+        - /var/vcap/jobs/cloudfoundry_alerts/cf_routes.alerts
+        - /var/vcap/jobs/cloudfoundry_alerts/diego.alerts
+        - /var/vcap/jobs/cloudfoundry_alerts/prometheus_cf_exporter.alerts
+        - /var/vcap/jobs/cloudfoundry_alerts/prometheus_firehose_exporter.alerts
+        - /var/vcap/jobs/mysql_alerts/performance.alerts
+        - /var/vcap/jobs/mysql_alerts/prometheus_mysqld_exporter.alerts
+        - /var/vcap/jobs/mysql_alerts/galera.alerts
+        - /var/vcap/jobs/probe_alerts/probe.alerts
+        - /var/vcap/jobs/prometheus_alerts/prometheus.alerts
       scrape_configs:
         - job_name: bosh
           scrape_interval: 2m
@@ -104,94 +233,48 @@ job_types:
           static_configs:
             - targets:
               - localhost:9190
-        - job_name: bosh_tsdb
-          file_sd_configs:
-            - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
-          relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
-              regex: bosh_tsdb_exporter
-              action: keep
-            - source_labels:
-              - __address__
-              regex: "(.*)"
-              target_label: __address__
-              replacement: "${1}:9194"
+        - job_name: collectd
+          static_configs:
+            - targets:
+              - localhost:9103
         - job_name: cf_exporter
-          scrape_interval: 4m
-          scrape_timeout: 2m
-          file_sd_configs:
-            - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
-          relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
-              regex: cf_exporter
-              action: keep
-            - source_labels:
-              - __address__
-              regex: "(.*)"
-              target_label: __address__
-              replacement: "${1}:9193"
+          scrape_interval: 2m
+          scrape_timeout: 1m
+          static_configs:
+            - targets:
+              - localhost:9193
         - job_name: firehose
-          file_sd_configs:
-            - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
-          relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
-              regex: firehose_exporter
-              action: keep
-            - source_labels:
-              - __address__
-              regex: "(.*)"
-              target_label: __address__
-              replacement: "${1}:9186"
+          static_configs:
+            - targets:
+              - localhost:9186
+        - job_name: mysqld_exporter
+          static_configs:
+            - targets:
+              - localhost:9104
         - job_name: node
           file_sd_configs:
             - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
+              - /var/vcap/store/bosh_exporter/bosh_target_groups.json
           relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
+            - source_labels: [__meta_bosh_job_process_name]
               regex: node_exporter
               action: keep
-            - source_labels:
-              - __address__
+            - source_labels: [__address__]
               regex: "(.*)"
               target_label: __address__
               replacement: "${1}:9100"
-        - job_name: postgres
-          file_sd_configs:
-            - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
-          relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
-              regex: postgres_exporter
-              action: keep
-            - source_labels:
-              - __address__
-              regex: "(.*)"
-              target_label: __address__
-              replacement: "${1}:9187"
         - job_name: prometheus
-          file_sd_configs:
-            - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
-          relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
-              regex: prometheus
-              action: keep
-            - source_labels:
-              - __address__
-              regex: "(.*)"
-              target_label: __address__
-              replacement: "${1}:9090"
-      web:
-        external_url: https://prometheus.(( ..cf.cloud_controller.system_domain.value ))
+          static_configs:
+            - targets:
+              - localhost:9090
+        - job_name: pushgateway
+          static_configs:
+            - targets:
+              - localhost:9091
+        - job_name: statsd
+          static_configs:
+            - targets:
+              - localhost:9102
     bosh_exporter:
       bosh:
         uaa:
@@ -212,393 +295,177 @@ job_types:
       metrics:
         environment: cf
       skip_ssl_verify: (( ..cf.ha_proxy.skip_cert_verify.value ))
-  max_in_flight: 100%
-  name: prometheus
-  resource_definitions:
-  - configurable: true
-    constraints:
-      min: 2048
-    default: 4096
-    name: ram
-    type: integer
-  - configurable: true
-    constraints:
-      min: 16384
-    default: 32768
-    name: ephemeral_disk
-    type: integer
-  - configurable: true
-    constraints:
-      error_message: Decreasing disk size not allowed
-      may_only_increase: true
-      min: 5120
-    default: 10240
-    name: persistent_disk
-    type: integer
-  - configurable: true
-    constraints:
-      min: 1
-    default: 2
-    name: cpu
-    type: integer
-  resource_label: Prometheus
-  single_az_only: false
-  static_ip: 0
+    mysqld_exporter:
+      mysql:
+        address: (( ..cf.mysql_proxy.service_hostname.value || ..cf.mysql_proxy.first_ip || ..cf.mysql.first_ip || ..cf.properties.system_database.external.host.value ))
+        port: 3306
+        username: (( ..cf.mysql.mysql_admin_credentials.identity ))
+        password: (( ..cf.mysql.mysql_admin_credentials.password ))
+    firehose_exporter:
+      uaa:
+        url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
+        client_id: (( ..cf.uaa.opentsdb_nozzle_credentials.identity ))
+        client_secret: (( ..cf.uaa.opentsdb_nozzle_credentials.password ))
+      doppler:
+        url: wss://doppler.(( ..cf.cloud_controller.system_domain.value )):(( ..cf.properties.logger_endpoint_port.value || "443" ))
+      web:
+        port: 9186
+      metrics:
+        environment: cf
+      skip_ssl_verify: (( ..cf.ha_proxy.skip_cert_verify.value ))
+
+- name: grafana
+  resource_label: Grafana
+  description: Grafana dashboard for Prometheus
   templates:
-  - name: prometheus
-    release: prometheus
-  - name: bosh_alerts
-    release: prometheus
-  - name: cloudfoundry_alerts
-    release: prometheus
-  - name: prometheus_alerts
-    release: prometheus
-  - name: bosh_exporter
-    release: prometheus
-  - name: cf_exporter
-    release: prometheus
-- description: Postgres DB for Grafana dashboard
-  dynamic_ip: 1
-  errand: false
-  instance_definition:
-    configurable: false
-    default: 1
-    name: instances
-  manifest: |
-    databases:
-      databases:
-      - citext: true
-        name: grafana
-      port: 5432
-      roles:
-      - name: ((( postgres_grafana.username )))
-        password: ((( postgres_grafana.password )))
-    postgres_exporter:
-      datasource_name: postgresql://((( postgres_grafana.username ))):((( postgres_grafana.password )))@127.0.0.1:5432/?sslmode=disable
-  max_in_flight: 100%
-  name: database
+    - name: grafana
+      release: prometheus
+    - name: bosh_dashboards
+      release: prometheus
+    - name: cloudfoundry_dashboards
+      release: prometheus
+    - name: system_dashboards
+      release: prometheus
+    - name: mysql_dashboards
+      release: prometheus
+    - name: probe_dashboards
+      release: prometheus
+    - name: prometheus_dashboards
+      release: prometheus
   resource_definitions:
-  - configurable: true
+  - name: ram
+    type: integer
+    configurable: true
+    default: 4096
     constraints:
       min: 2048
-    default: 4096
-    name: ram
+  - name: ephemeral_disk
     type: integer
-  - configurable: true
-    constraints:
-      min: 10240
+    configurable: true
     default: 16384
-    name: ephemeral_disk
-    type: integer
-  - configurable: true
     constraints:
-      error_message: Decreasing disk size not allowed
-      may_only_increase: true
       min: 10240
-    default: 10240
-    name: persistent_disk
+  - name: persistent_disk
     type: integer
-  - configurable: true
+    configurable: true
+    default: 1024
+    constraints:
+      min: 1024
+      may_only_increase: true
+      error_message: Decreasing disk size not allowed
+  - name: cpu
+    type: integer
+    configurable: true
+    default: 2
     constraints:
       min: 1
-    default: 2
-    name: cpu
-    type: integer
-  resource_label: Postgres
-  single_az_only: true
   static_ip: 0
-  templates:
-  - name: postgres
-    release: postgres
-  - name: postgres_exporter
-    release: prometheus
-- description: Grafana dashboard for Prometheus
   dynamic_ip: 1
+  max_in_flight: 100%
+  single_az_only: false
   errand: false
   instance_definition:
+    name: instances
     configurable: true
     default: 1
-    name: instances
   manifest: |
     grafana:
-      auth:
-        generic_oauth:
-          allow_sign_up: true
-          api_url: https://login.(( ..cf.cloud_controller.system_domain.value ))/userinfo
-          auth_url: https://login.(( ..cf.cloud_controller.system_domain.value ))/oauth/authorize
-          client_id: (( uaa_clients_grafana.identity ))
-          client_secret: (( uaa_clients_grafana.password ))
-          enabled: true
-          name: PCF
-          scopes: openid
-          tls_client_cert: (( ..cf.uaa.service_provider_key_credentials.cert_pem ))
-          tls_client_key: (( ..cf.uaa.service_provider_key_credentials.private_key_pem ))
-          token_url: https://login.(( ..cf.cloud_controller.system_domain.value ))/oauth/token
       security:
-        admin_user: ((( grafana_admin_credentials.username )))
-        admin_password: ((( grafana_admin_credentials.password )))
-        secret_key: ((( grafana_admin_secret )))
+        admin_password: (( ..prometheus.nginx.grafana_admin_credentials.password ))
       prometheus:
         dashboard_files:
           - /var/vcap/jobs/bosh_dashboards/*.json
           - /var/vcap/jobs/cloudfoundry_dashboards/*.json
-          - /var/vcap/jobs/grafana_dashboards/*.json
-          - /var/vcap/jobs/postgres_dashboards/*.json
+          - /var/vcap/jobs/mysql_dashboards/*.json
+          - /var/vcap/jobs/probe_dashboards/*.json
           - /var/vcap/jobs/prometheus_dashboards/*.json
+          - /var/vcap/jobs/system_dashboards/*.json
       dashboards:
         json:
           enabled: true
-      server:
-        root_url: https://grafana.(( ..cf.cloud_controller.system_domain.value ))
-      database:
-        name: grafana
-        type: postgres
-        port: 5432
-        user: ((( postgres_grafana.username )))
-        password: ((( postgres_grafana.password )))
-      session:
-        provider_name: grafana
-        provider: postgres
-        provider_port: 5432
-        provider_user: ((( postgres_grafana.username )))
-        provider_password: ((( postgres_grafana.password )))
-  max_in_flight: 100%
-  name: grafana
-  property_blueprints:
-  - configurable: false
-    default:
-      identity: grafana
-    freeze_on_deploy: false
-    name: uaa_clients_grafana
-    optional: false
-    type: simple_credentials
-    unique: true
+
+- name: nginx
+  resource_label: Nginx
+  description: Webserver to front Grafana dashboard, Prometheus & Alert Manager
+  templates:
+    - name: nginx
+      release: prometheus
   resource_definitions:
-  - configurable: true
-    constraints:
-      min: 2048
-    default: 4096
-    name: ram
+  - name: ram
     type: integer
-  - configurable: true
+    configurable: true
+    default: 2048
     constraints:
-      min: 10240
-    default: 16384
-    name: ephemeral_disk
-    type: integer
-  - configurable: true
-    constraints:
-      error_message: Decreasing disk size not allowed
-      may_only_increase: true
       min: 1024
-    default: 1024
-    name: persistent_disk
+  - name: ephemeral_disk
     type: integer
-  - configurable: true
+    configurable: true
+    default: 10240
+    constraints:
+      min: 5120
+  - name: persistent_disk
+    type: integer
+    configurable: true
+    default: 1024
+    constraints:
+      min: 1024
+      may_only_increase: true
+      error_message: Decreasing disk size not allowed
+  - name: cpu
+    type: integer
+    configurable: true
+    default: 2
     constraints:
       min: 1
-    default: 2
-    name: cpu
-    type: integer
-  resource_label: Grafana
-  single_az_only: false
   static_ip: 0
-  templates:
-  - name: grafana
-    release: prometheus
-  - name: grafana_dashboards
-    release: prometheus
-  - name: postgres_dashboards
-    release: prometheus
-  - name: prometheus_dashboards
-    release: prometheus
-  - name: bosh_dashboards
-    release: prometheus
-  - name: cloudfoundry_dashboards
-    release: prometheus
-- description: Webserver to front Grafana dashboard, Prometheus & Alert Manager
   dynamic_ip: 1
+  max_in_flight: 100%
+  single_az_only: false
   errand: false
   instance_definition:
+    name: instances
     configurable: true
     default: 1
-    name: instances
+  property_blueprints:
+  - name: grafana_admin_credentials
+    type: simple_credentials
+    default:
+      identity: admin
+    configurable: false
+    optional: false
+    unique: true
+    freeze_on_deploy: false
+  - name: prometheus_admin_credentials
+    type: simple_credentials
+    default:
+      identity: admin
+    configurable: false
+    optional: false
+    unique: true
+    freeze_on_deploy: false
+  - name: alertmanager_admin_credentials
+    type: simple_credentials
+    default:
+      identity: admin
+    configurable: false
+    optional: false
+    unique: true
+    freeze_on_deploy: false
   manifest: |
     nginx:
-      prometheus:
-        auth_username: ((( prometheus_admin_credentials.username )))
-        auth_password: ((( prometheus_admin_credentials.password )))
+      grafana:
+        auth_username: admin
+        auth_password: (( grafana_admin_credentials.password ))
       alertmanager:
-        auth_username: ((( alertmanager_admin_credentials.username )))
-        auth_password: ((( alertmanager_admin_credentials.password )))
-    route_registrar:
-      routes:
-      - name: alertmanager
-        port: 9093
-        registration_interval: 20s
-        uris:
-        - alertmanager.(( ..cf.cloud_controller.system_domain.value ))
-      - name: prometheus
-        port: 9090
-        registration_interval: 20s
-        uris:
-        - prometheus.(( ..cf.cloud_controller.system_domain.value ))
-      - name: grafana
-        port: 3000
-        registration_interval: 60s
-        uris:
-        - grafana.(( ..cf.cloud_controller.system_domain.value ))
-  max_in_flight: 100%
-  name: nginx
-  property_blueprints:
-  - configurable: true
-    freeze_on_deploy: false
-    name: cf_name
-    optional: false
-    type: string
-    unique: false
-  resource_definitions:
-  - configurable: true
-    constraints:
-      min: 1024
-    default: 2048
-    name: ram
-    type: integer
-  - configurable: true
-    constraints:
-      min: 5120
-    default: 10240
-    name: ephemeral_disk
-    type: integer
-  - configurable: true
-    constraints:
-      error_message: Decreasing disk size not allowed
-      may_only_increase: true
-      min: 1024
-    default: 1024
-    name: persistent_disk
-    type: integer
-  - configurable: true
-    constraints:
-      min: 1
-    default: 1
-    name: cpu
-    type: integer
-  resource_label: Nginx
-  single_az_only: false
-  static_ip: 0
-  templates:
-  - name: nginx
-    release: prometheus
-  - consumes: |
-      nats: {from: nats, deployment: (( cf_name.value ))}
-    name: route_registrar
-    release: routing
-- description: Firehose for metrics
-  dynamic_ip: 1
-  errand: false
-  instance_definition:
-    configurable: true
-    default: 1
-    name: instances
-  manifest: |
-    firehose_exporter:
-      doppler:
-        max_retry_count: 300
-        subscription_id: cf
-        url: wss://doppler.(( ..cf.cloud_controller.system_domain.value )):(( ..cf.properties.logger_endpoint_port.value || "4443" ))
-      metrics:
-        environment: cf
-      skip_ssl_verify: true
-      uaa:
-        client_id: (( ..cf.uaa.opentsdb_nozzle_credentials.identity ))
-        client_secret: (( ..cf.uaa.opentsdb_nozzle_credentials.password ))
-        url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
-  max_in_flight: 100%
-  name: firehose
-  resource_definitions:
-  - configurable: true
-    constraints:
-      min: 1024
-    default: 1024
-    name: ram
-    type: integer
-  - configurable: true
-    constraints:
-      min: 5120
-    default: 10240
-    name: ephemeral_disk
-    type: integer
-  - configurable: true
-    default: 0
-    name: persistent_disk
-    type: integer
-  - configurable: true
-    constraints:
-      min: 1
-    default: 1
-    name: cpu
-    type: integer
-  resource_label: Firehose
-  single_az_only: true
-  static_ip: 0
-  templates:
-  - name: firehose_exporter
-    release: prometheus
-label: Prometheus
-metadata_version: "1.10"
-minimum_version_for_upgrade: 15.0.0
-name: prometheus
-product_version: 18.6.2
-provides_product_versions:
-- name: prometheus
-  version: 18.6.2
-rank: 1
-releases:
-- file: prometheus-18.6.2.tgz
-  name: prometheus
-  version: 18.6.2
-- file: postgres-release-20.tgz
-  name: postgres
-  version: "20"
-- file: cf-routing-release-0.163.0.tgz
-  name: routing
-  version: 0.163.0
-- file: node-exporter-2.0.0.tgz
-  name: node-exporter
-  version: 2.0.0
-requires_product_versions:
-- name: cf
-  version: ~> 1.10
-service_broker: false
-stemcell_criteria:
-  enable_patch_security_updates: true
-  os: ubuntu-trusty
-  version: "3445"
+        auth_username: admin
+        auth_password: (( alertmanager_admin_credentials.password ))
+      prometheus:
+        auth_username: admin
+        auth_password: (( prometheus_admin_credentials.password ))
+
 update:
   canaries: 1
-  canary_watch_time: 1000-60000
   max_in_flight: 1
   serial: false
+  canary_watch_time: 1000-60000
   update_watch_time: 1000-60000
-variables:
-- name: prometheus_admin_credentials
-  options:
-    username: admin
-  type: user
-- name: alertmanager_admin_credentials
-  options:
-    username: admin
-  type: user
-- name: grafana_admin_credentials
-  options:
-    username: admin
-  type: user
-- name: postgres_grafana
-  options:
-    username: grafana
-  type: user
-- name: grafana_admin_secret
-  options:
-    length: 40
-  type: password
