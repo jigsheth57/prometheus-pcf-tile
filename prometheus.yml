@@ -485,7 +485,7 @@ job_types:
     - name: route_registrar
       release: routing
       consumes: |
-        nats: {from: nats, deployment: (( cf_name.value ))}
+        nats: {from: nats, deployment: (( ..cf.deployment_name ))}
   resource_definitions:
   - name: ram
     type: integer

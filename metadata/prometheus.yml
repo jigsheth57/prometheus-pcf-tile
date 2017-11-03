@@ -491,7 +491,7 @@ job_types:
   - name: nginx
     release: prometheus
   - consumes: |
-      nats: {from: nats, deployment: (( cf_name.value ))}
+      nats: {from: nats, deployment: (( ..cf.deployment_name ))}
     name: route_registrar
     release: routing
 - description: Firehose for metrics
@@ -549,21 +549,21 @@ label: Prometheus
 metadata_version: "1.10"
 minimum_version_for_upgrade: 15.0.0
 name: prometheus
-product_version: 18.6.2
+product_version: 19.0.0
 provides_product_versions:
 - name: prometheus
-  version: 18.6.2
+  version: 19.0.0
 rank: 1
 releases:
-- file: prometheus-18.6.2.tgz
+- file: prometheus-19.0.0.tgz
   name: prometheus
-  version: 18.6.2
-- file: postgres-release-20.tgz
+  version: 19.0.0
+- file: postgres-release-21.tgz
   name: postgres
-  version: "20"
-- file: cf-routing-release-0.163.0.tgz
+  version: "21"
+- file: cf-routing-release-0.165.0.tgz
   name: routing
-  version: 0.163.0
+  version: 0.165.0
 - file: node-exporter-2.0.0.tgz
   name: node-exporter
   version: 2.0.0
