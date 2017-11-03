@@ -12,7 +12,7 @@ stemcell_criteria:
   enable_patch_security_updates: true
 requires_product_versions:
 - name: cf
-  version: "~> 1.10"
+  version: "~> 1.11"
 provides_product_versions:
 - name: prometheus
   version: ((prometheus_boshrelease_version))
