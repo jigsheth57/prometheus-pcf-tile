@@ -33,15 +33,6 @@ releases:
   file: ((node_exporter_boshrelease_file))
   version: ((node_exporter_boshrelease_version))
 
-form_types:
-- property_inputs:
-  - reference: ".nginx.cf_name"
-    label: ERT Deployment Name
-    description: ERT Deployment Name.
-  name: cf_info
-  label: ERT Info
-  description: CF Deployment name required for route register.
-
 variables:
 - name: prometheus_admin_credentials
   options:
@@ -522,13 +513,6 @@ job_types:
     name: instances
     configurable: true
     default: 1
-  property_blueprints:
-  - name: cf_name
-    type: string
-    configurable: true
-    optional: false
-    unique: false
-    freeze_on_deploy: false
   manifest: |
     nginx:
       prometheus:
