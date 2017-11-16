@@ -33,10 +33,10 @@ Login to BOSH UAA
 
 Login to Credhub via credhub_admin client created above
 
-``` $ credhub login -s https://192.168.101.5:8844 --client-name credhub_admin --client-secret <password from above step> --ca-cert ./<root_ca_certificate from opsmanager> ```
+``` $ credhub login -s https://<Director IP>:8844 --client-name credhub_admin --client-secret <password from above step> --ca-cert ./<root_ca_certificate from opsmanager> ```
 
 ``` $ credhub find -a ```
 
 ``` $ credhub find -p <path for prometheus deployment> ```
 
-``` $ credhub get --name '/p-bosh/prometheus-105938b80a45599cbc20/grafana_admin_credentials' ```
+``` $ credhub get --name '<path for prometheus deployment>/grafana_admin_credentials' ```
