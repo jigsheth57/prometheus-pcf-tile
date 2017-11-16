@@ -332,6 +332,8 @@ job_types:
         admin_password: ((( grafana_admin_credentials.password )))
         secret_key: ((( grafana_admin_secret )))
       prometheus:
+        use_external_url: true
+        tls_skip_verify: true
         dashboard_files:
           - /var/vcap/jobs/bosh_dashboards/*.json
           - /var/vcap/jobs/cloudfoundry_dashboards/*.json
@@ -535,15 +537,15 @@ label: Prometheus
 metadata_version: "1.10"
 minimum_version_for_upgrade: 15.0.0
 name: prometheus
-product_version: 19.0.1
+product_version: 19.0.1.1
 provides_product_versions:
 - name: prometheus
-  version: 19.0.1
+  version: 19.0.1.1
 rank: 1
 releases:
 - file: prometheus-19.0.1.tgz
   name: prometheus
-  version: 19.0.1
+  version: 19.0.1.1
 - file: postgres-release-21.tgz
   name: postgres
   version: "21"

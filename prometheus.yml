@@ -444,6 +444,8 @@ job_types:
         admin_password: ((( grafana_admin_credentials.password )))
         secret_key: ((( grafana_admin_secret )))
       prometheus:
+        use_external_url: true
+        tls_skip_verify: true
         dashboard_files:
           - /var/vcap/jobs/bosh_dashboards/*.json
           - /var/vcap/jobs/cloudfoundry_dashboards/*.json
