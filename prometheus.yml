@@ -438,6 +438,7 @@ job_types:
           tls_client_cert: (( ..cf.uaa.service_provider_key_credentials.cert_pem ))
           tls_client_key: (( ..cf.uaa.service_provider_key_credentials.private_key_pem ))
           token_url: https://login.(( ..cf.cloud_controller.system_domain.value ))/oauth/token
+          tls_skip_verify_insecure: true
       security:
         admin_user: ((( grafana_admin_credentials.username )))
         admin_password: ((( grafana_admin_credentials.password )))
