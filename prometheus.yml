@@ -4,7 +4,7 @@ product_version: ((prometheus_boshrelease_version))
 minimum_version_for_upgrade: 15.0.0
 label: Prometheus
 description: Prometheus with Grafana to monitor PCF
-metadata_version: '1.10'
+metadata_version: '1.12'
 service_broker: false
 stemcell_criteria:
   os: ubuntu-trusty
@@ -12,7 +12,7 @@ stemcell_criteria:
   enable_patch_security_updates: true
 requires_product_versions:
 - name: cf
-  version: "~> 1.11"
+  version: "~> 1.12"
 provides_product_versions:
 - name: prometheus
   version: ((prometheus_boshrelease_version))
@@ -91,7 +91,7 @@ job_types:
       min: 1
   static_ip: 0
   dynamic_ip: 1
-  max_in_flight: 100%
+  max_in_flight: 1
   single_az_only: false
   errand: false
   instance_definition:
@@ -172,7 +172,7 @@ job_types:
       min: 1
   static_ip: 0
   dynamic_ip: 1
-  max_in_flight: 100%
+  max_in_flight: 1
   single_az_only: false
   errand: false
   instance_definition:
@@ -188,6 +188,7 @@ job_types:
           engine: 'persisted'
       rule_files:
         - /var/vcap/jobs/prometheus_alerts/*.alerts
+        - /var/vcap/jobs/postgres_alerts/*.alerts
         - /var/vcap/jobs/bosh_alerts/*.alerts
         - /var/vcap/jobs/cloudfoundry_alerts/*.alerts
       scrape_configs:
@@ -197,21 +198,7 @@ job_types:
           static_configs:
             - targets:
               - localhost:9190
-        - job_name: bosh_tsdb
-          file_sd_configs:
-            - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
-          relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
-              regex: bosh_tsdb_exporter
-              action: keep
-            - source_labels:
-              - __address__
-              regex: "(.*)"
-              target_label: __address__
-              replacement: "${1}:9194"
-        - job_name: cf_exporter
+        - job_name: cf
           scrape_interval: 4m
           scrape_timeout: 2m
           file_sd_configs:
@@ -343,7 +330,7 @@ job_types:
       min: 1
   static_ip: 0
   dynamic_ip: 1
-  max_in_flight: 100%
+  max_in_flight: 1
   single_az_only: true
   errand: false
   instance_definition:
@@ -407,7 +394,7 @@ job_types:
       min: 1
   static_ip: 0
   dynamic_ip: 1
-  max_in_flight: 100%
+  max_in_flight: 1
   single_az_only: false
   errand: false
   instance_definition:
@@ -449,7 +436,6 @@ job_types:
         dashboard_files:
           - /var/vcap/jobs/bosh_dashboards/*.json
           - /var/vcap/jobs/cloudfoundry_dashboards/*.json
-          - /var/vcap/jobs/grafana_dashboards/*.json
           - /var/vcap/jobs/postgres_dashboards/*.json
           - /var/vcap/jobs/prometheus_dashboards/*.json
       dashboards:
@@ -509,7 +495,7 @@ job_types:
       min: 1
   static_ip: 0
   dynamic_ip: 1
-  max_in_flight: 100%
+  max_in_flight: 1
   single_az_only: false
   errand: false
   instance_definition:
@@ -573,7 +559,7 @@ job_types:
       min: 1
   static_ip: 0
   dynamic_ip: 1
-  max_in_flight: 100%
+  max_in_flight: 1
   single_az_only: true
   errand: false
   instance_definition:
@@ -585,7 +571,7 @@ job_types:
       doppler:
         max_retry_count: 300
         subscription_id: cf
-        url: wss://doppler.(( ..cf.cloud_controller.system_domain.value )):(( ..cf.properties.logger_endpoint_port.value || "4443" ))
+        url: wss://doppler.(( ..cf.cloud_controller.system_domain.value )):(( ..cf.properties.logger_endpoint_port.value || "443" ))
       metrics:
         environment: cf
       skip_ssl_verify: true
@@ -598,5 +584,5 @@ update:
   canaries: 1
   max_in_flight: 1
   serial: false
-  canary_watch_time: 1000-60000
-  update_watch_time: 1000-60000
+  canary_watch_time: 1000-100000
+  update_watch_time: 1000-100000

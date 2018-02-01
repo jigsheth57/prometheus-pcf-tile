@@ -33,7 +33,7 @@ job_types:
         daily: true
       web:
         external_url: https://alertmanager.(( ..cf.cloud_controller.system_domain.value ))
-  max_in_flight: 100%
+  max_in_flight: 1
   name: alertmanager
   property_blueprints:
   - name: alertmanager_mesh
@@ -87,6 +87,7 @@ job_types:
           engine: 'persisted'
       rule_files:
         - /var/vcap/jobs/prometheus_alerts/*.alerts
+        - /var/vcap/jobs/postgres_alerts/*.alerts
         - /var/vcap/jobs/bosh_alerts/*.alerts
         - /var/vcap/jobs/cloudfoundry_alerts/*.alerts
       scrape_configs:
@@ -96,21 +97,7 @@ job_types:
           static_configs:
             - targets:
               - localhost:9190
-        - job_name: bosh_tsdb
-          file_sd_configs:
-            - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
-          relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
-              regex: bosh_tsdb_exporter
-              action: keep
-            - source_labels:
-              - __address__
-              regex: "(.*)"
-              target_label: __address__
-              replacement: "${1}:9194"
-        - job_name: cf_exporter
+        - job_name: cf
           scrape_interval: 4m
           scrape_timeout: 2m
           file_sd_configs:
@@ -204,7 +191,7 @@ job_types:
       metrics:
         environment: cf
       skip_ssl_verify: (( ..cf.ha_proxy.skip_cert_verify.value ))
-  max_in_flight: 100%
+  max_in_flight: 1
   name: prometheus
   resource_definitions:
   - configurable: true
@@ -267,7 +254,7 @@ job_types:
         password: ((( postgres_grafana.password )))
     postgres_exporter:
       datasource_name: postgresql://((( postgres_grafana.username ))):((( postgres_grafana.password )))@127.0.0.1:5432/?sslmode=disable
-  max_in_flight: 100%
+  max_in_flight: 1
   name: database
   resource_definitions:
   - configurable: true
@@ -357,7 +344,7 @@ job_types:
         provider_port: 5432
         provider_user: ((( postgres_grafana.username )))
         provider_password: ((( postgres_grafana.password )))
-  max_in_flight: 100%
+  max_in_flight: 1
   name: grafana
   property_blueprints:
   - configurable: false
@@ -443,7 +430,7 @@ job_types:
         registration_interval: 60s
         uris:
         - grafana.(( ..cf.cloud_controller.system_domain.value ))
-  max_in_flight: 100%
+  max_in_flight: 1
   name: nginx
   resource_definitions:
   - configurable: true
@@ -494,7 +481,7 @@ job_types:
       doppler:
         max_retry_count: 300
         subscription_id: cf
-        url: wss://doppler.(( ..cf.cloud_controller.system_domain.value )):(( ..cf.properties.logger_endpoint_port.value || "4443" ))
+        url: wss://doppler.(( ..cf.cloud_controller.system_domain.value )):(( ..cf.properties.logger_endpoint_port.value || "443" ))
       metrics:
         environment: cf
       skip_ssl_verify: true
@@ -502,7 +489,7 @@ job_types:
         client_id: (( ..cf.uaa.opentsdb_nozzle_credentials.identity ))
         client_secret: (( ..cf.uaa.opentsdb_nozzle_credentials.password ))
         url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
-  max_in_flight: 100%
+  max_in_flight: 1
   name: firehose
   resource_definitions:
   - configurable: true
@@ -534,41 +521,41 @@ job_types:
   - name: firehose_exporter
     release: prometheus
 label: Prometheus
-metadata_version: "1.10"
+metadata_version: "1.12"
 minimum_version_for_upgrade: 15.0.0
 name: prometheus
-product_version: 19.0.1
+product_version: 21.1.0
 provides_product_versions:
 - name: prometheus
-  version: 19.0.1
+  version: 21.1.0
 rank: 1
 releases:
-- file: prometheus-19.0.1.tgz
+- file: prometheus-21.1.0.tgz
   name: prometheus
-  version: 19.0.1
-- file: postgres-release-21.tgz
+  version: 21.1.0
+- file: postgres-release-25.tgz
   name: postgres
-  version: "21"
-- file: cf-routing-release-0.165.0.tgz
+  version: "25"
+- file: cf-routing-release-0.171.0.tgz
   name: routing
-  version: 0.165.0
-- file: node-exporter-2.0.0.tgz
+  version: 0.171.0
+- file: node-exporter-3.0.1.tgz
   name: node-exporter
-  version: 2.0.0
+  version: 3.0.1
 requires_product_versions:
 - name: cf
-  version: ~> 1.11
+  version: ~> 1.12
 service_broker: false
 stemcell_criteria:
   enable_patch_security_updates: true
   os: ubuntu-trusty
-  version: "3445"
+  version: "3468"
 update:
   canaries: 1
-  canary_watch_time: 1000-60000
+  canary_watch_time: 1000-100000
   max_in_flight: 1
   serial: false
-  update_watch_time: 1000-60000
+  update_watch_time: 1000-100000
 variables:
 - name: prometheus_admin_credentials
   options:
