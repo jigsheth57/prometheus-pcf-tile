@@ -5,7 +5,7 @@ job_types:
   dynamic_ip: 1
   errand: false
   instance_definition:
-    configurable: true
+    configurable: false
     default: 1
     name: instances
   manifest: |
@@ -75,7 +75,7 @@ job_types:
   dynamic_ip: 1
   errand: false
   instance_definition:
-    configurable: true
+    configurable: false
     default: 1
     name: instances
   manifest: |
@@ -324,7 +324,6 @@ job_types:
         dashboard_files:
           - /var/vcap/jobs/bosh_dashboards/*.json
           - /var/vcap/jobs/cloudfoundry_dashboards/*.json
-          - /var/vcap/jobs/grafana_dashboards/*.json
           - /var/vcap/jobs/postgres_dashboards/*.json
           - /var/vcap/jobs/prometheus_dashboards/*.json
       dashboards:

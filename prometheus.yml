@@ -96,7 +96,7 @@ job_types:
   errand: false
   instance_definition:
     name: instances
-    configurable: true
+    configurable: false
     default: 1
   property_blueprints:
   - name: alertmanager_mesh
@@ -177,7 +177,7 @@ job_types:
   errand: false
   instance_definition:
     name: instances
-    configurable: true
+    configurable: false
     default: 1
   manifest: |
     prometheus:
