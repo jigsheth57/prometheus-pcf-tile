@@ -94,9 +94,19 @@ job_types:
         - job_name: bosh
           scrape_interval: 2m
           scrape_timeout: 1m
-          static_configs:
-            - targets:
-              - localhost:9190
+          file_sd_configs:
+            - files:
+              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
+          relabel_configs:
+            - source_labels:
+              - __meta_bosh_job_process_name
+              regex: bosh_exporter
+              action: keep
+            - source_labels:
+              - __address__
+              regex: "(.*)"
+              target_label: __address__
+              replacement: "${1}:9190"
         - job_name: cf
           scrape_interval: 4m
           scrape_timeout: 2m
@@ -308,7 +318,7 @@ job_types:
           client_id: (( uaa_clients_grafana.identity ))
           client_secret: (( uaa_clients_grafana.password ))
           enabled: true
-          name: PCF
+          name: Pivotal Cloud Foundry
           scopes: openid
           tls_client_cert: (( ..cf.uaa.service_provider_key_credentials.cert_pem ))
           tls_client_key: (( ..cf.uaa.service_provider_key_credentials.private_key_pem ))
@@ -520,35 +530,35 @@ job_types:
   - name: firehose_exporter
     release: prometheus
 label: Prometheus
-metadata_version: "1.12"
-minimum_version_for_upgrade: 15.0.0
+metadata_version: "2.2"
+minimum_version_for_upgrade: 21.1.0
 name: prometheus
-product_version: 21.1.0
+product_version: 23.1.0
 provides_product_versions:
 - name: prometheus
-  version: 21.1.0
+  version: 23.1.0
 rank: 1
 releases:
-- file: prometheus-21.1.0.tgz
+- file: prometheus-23.1.0.tgz
   name: prometheus
-  version: 21.1.0
-- file: postgres-release-25.tgz
+  version: 23.1.0
+- file: postgres-release-28.tgz
   name: postgres
-  version: "25"
-- file: cf-routing-release-0.171.0.tgz
+  version: "28"
+- file: cf-routing-release-0.174.0.tgz
   name: routing
-  version: 0.171.0
-- file: node-exporter-3.0.1.tgz
+  version: 0.174.0
+- file: node-exporter-4.0.1.tgz
   name: node-exporter
-  version: 3.0.1
+  version: 4.0.1
 requires_product_versions:
 - name: cf
-  version: ~> 1.12
+  version: ~> 2.2
 service_broker: false
 stemcell_criteria:
   enable_patch_security_updates: true
   os: ubuntu-trusty
-  version: "3468"
+  version: "3586"
 update:
   canaries: 1
   canary_watch_time: 1000-100000

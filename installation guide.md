@@ -1,7 +1,7 @@
 # Installation Guide
 
-1. Download the prometheus tile from [here](https://s3.amazonaws.com/pcf-softwares-57/prometheus-19.0.1.1.pivotal).
-2. Upload it to Ops Manager. (Note. **ERT 1.11.+ needs to be installed**)
+1. Download the prometheus tile from [here](https://s3.amazonaws.com/pcf-softwares-57/prometheus-21.1.0.pivotal).
+2. Upload it to Ops Manager. (Note. **ERT 2.2.+ needs to be installed**)
 3. Add it and configure **AZ and Network Assignments**.
 4. (optional) configure **Resource Config** if require
 5. Apply changes

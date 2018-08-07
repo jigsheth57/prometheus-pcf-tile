@@ -1,10 +1,10 @@
 ---
 name: prometheus
 product_version: ((prometheus_boshrelease_version))
-minimum_version_for_upgrade: 15.0.0
+minimum_version_for_upgrade: 21.1.0
 label: Prometheus
 description: Prometheus with Grafana to monitor PCF
-metadata_version: '1.12'
+metadata_version: '2.2'
 service_broker: false
 stemcell_criteria:
   os: ubuntu-trusty
@@ -12,7 +12,7 @@ stemcell_criteria:
   enable_patch_security_updates: true
 requires_product_versions:
 - name: cf
-  version: "~> 1.12"
+  version: "~> 2.2"
 provides_product_versions:
 - name: prometheus
   version: ((prometheus_boshrelease_version))
@@ -195,9 +195,19 @@ job_types:
         - job_name: bosh
           scrape_interval: 2m
           scrape_timeout: 1m
-          static_configs:
-            - targets:
-              - localhost:9190
+          file_sd_configs:
+            - files:
+              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
+          relabel_configs:
+            - source_labels:
+              - __meta_bosh_job_process_name
+              regex: bosh_exporter
+              action: keep
+            - source_labels:
+              - __address__
+              regex: "(.*)"
+              target_label: __address__
+              replacement: "${1}:9190"
         - job_name: cf
           scrape_interval: 4m
           scrape_timeout: 2m
@@ -420,7 +430,7 @@ job_types:
           client_id: (( uaa_clients_grafana.identity ))
           client_secret: (( uaa_clients_grafana.password ))
           enabled: true
-          name: PCF
+          name: Pivotal Cloud Foundry
           scopes: openid
           tls_client_cert: (( ..cf.uaa.service_provider_key_credentials.cert_pem ))
           tls_client_key: (( ..cf.uaa.service_provider_key_credentials.private_key_pem ))
