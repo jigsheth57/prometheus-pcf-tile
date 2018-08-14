@@ -1,11 +1,12 @@
 # Installation Guide
 
-1. Download the prometheus tile from [here](https://s3.amazonaws.com/pcf-softwares-57/prometheus-21.1.0.pivotal).
+1. Download the prometheus tile from [here](https://s3.amazonaws.com/pcf-softwares-57/prometheus-23.1.0.pivotal).
 2. Upload it to Ops Manager. (Note. **ERT 2.2.+ needs to be installed**)
 3. Add it and configure **AZ and Network Assignments**.
-4. (optional) configure **Resource Config** if require
-5. Apply changes
-6. Integrate ERT UAA for Single Sign-on (SSO)
+4. Configure BOSH UAA Monitor Client (Note. you can use existing credentials from BOSH Director tile. i.e. Credentials->BOSH Director->Health Monitor Credentials)
+5. (optional) configure **Resource Config** if require
+6. Errands: Create UAA Client for Prometheus integrate ERT UAA for Single Sign-on (SSO)
+7. Apply changes
 
 Login to ERT UAA
 
@@ -14,14 +15,6 @@ References:
 * [Prometheus/Credentials/Grafana/Uaa Clients Grafana](/images/grafana_client.png)
 
 
-``` $ uaac target uaa.<system domain> ```
-
-``` $ uaac token client get admin -s <grab the password from opsmanager console -> Pivotal Elastic Runtime/Credentials/UAA/Admin Client Credentials>```
-
-Once login to ERT UAA, create grafana client, which would be used as SSO for Grafana dashboard.
-
-``` $ uaac client add grafana --name grafana -s <grab the password from opsmanager console -> Prometheus/Credentials/Grafana/Uaa Clients Grafana> --scope openid --authorized_grant_types authorization_code --authorities "uaa.none" --access_token_validity 43200 --refresh_token_validity 43200 --redirect_uri https://grafana.<system domain> --no-interactive ```
-
 #### To retrieve or rotate admin clients from Bosh Credhub:
 Login to BOSH UAA
 
@@ -29,7 +22,7 @@ Login to BOSH UAA
 
 ``` $ uaac token owner get login admin -s <grab the password from opsmanager console -> Ops Manager Director/Ops Manager Director/Uaa Login Client Credentials> -p <grab the password from opsmanager console -> Ops Manager Director/Ops Manager Director/Uaa Admin User Credentials> ```
 
-``` $ uaac client add credhub_admin --name credhub_admin -s <some password you can rememeber> --scope uaa.none --authorized_grant_types client_credentials --authorities "credhub.write credhub.read" --access_token_validity 600 --refresh_token_validity 86400 --no-interactive ```
+``` $ uaac client add credhub_admin --name credhub_admin -s <some password you can remember> --scope uaa.none --authorized_grant_types client_credentials --authorities "credhub.write credhub.read" --access_token_validity 600 --refresh_token_validity 86400 --no-interactive ```
 
 Login to Credhub via credhub_admin client created above
 
@@ -37,6 +30,10 @@ Login to Credhub via credhub_admin client created above
 
 ``` $ credhub find -a ```
 
-``` $ credhub find -p <path for prometheus deployment> ```
+``` $ credhub find -p /p-bosh/<prometheus deployment name> ```
 
-``` $ credhub get --name '<path for prometheus deployment>/grafana_admin_credentials' ```
+``` $ credhub get --name '/p-bosh/<prometheus deployment name>/grafana_admin_credentials' ```
+
+``` $ credhub get --name '/p-bosh/<prometheus deployment name>/prometheus_admin_credentials' ```
+
+``` $ credhub get --name '/p-bosh/<prometheus deployment name>/alertmanager_admin_credentials' ```

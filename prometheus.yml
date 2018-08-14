@@ -36,9 +36,6 @@ releases:
   file: ((create-uaa-client_boshrelease_file))
   version: ((create-uaa-client_boshrelease_version))
 
-post_deploy_errands:
-- name: create-uaa-client
-
 variables:
 - name: prometheus_admin_credentials
   options:
@@ -60,6 +57,9 @@ variables:
   type: password
   options:
     length: 40
+
+post_deploy_errands:
+- name: create-uaa-client
 
 form_types:
 - name: bosh_uaa_client
@@ -145,11 +145,11 @@ job_types:
       web:
         external_url: https://alertmanager.(( ..cf.cloud_controller.system_domain.value ))
 
-- name: prometheus
+- name: prometheus2
   resource_label: Prometheus
   description: Prometheus and Exporters
   templates:
-    - name: prometheus
+    - name: prometheus2
       release: prometheus
     - name: bosh_alerts
       release: prometheus
@@ -476,11 +476,19 @@ job_types:
       prometheus:
         use_external_url: true
         tls_skip_verify: true
-        dashboard_files:
-          - /var/vcap/jobs/bosh_dashboards/*.json
-          - /var/vcap/jobs/cloudfoundry_dashboards/*.json
-          - /var/vcap/jobs/postgres_dashboards/*.json
-          - /var/vcap/jobs/prometheus_dashboards/*.json
+        dashboard_folders:
+          - name: BOSH
+            files:
+              - /var/vcap/jobs/bosh_dashboards/*.json
+          - name: PivotalCloudFoundry
+            files:
+              - /var/vcap/jobs/cloudfoundry_dashboards/*.json
+          - name: PostgreSQL
+            files:
+              - /var/vcap/jobs/postgres_dashboards/*.json
+          - name: Prometheus
+            files:
+              - /var/vcap/jobs/prometheus_dashboards/*.json
       dashboards:
         json:
           enabled: true
@@ -548,11 +556,13 @@ job_types:
   manifest: |
     nginx:
       prometheus:
-        auth_username: ((( prometheus_admin_credentials.username )))
-        auth_password: ((( prometheus_admin_credentials.password )))
+        auth_users:
+          - name: ((( prometheus_admin_credentials.username )))
+            password: ((( prometheus_admin_credentials.password )))
       alertmanager:
-        auth_username: ((( alertmanager_admin_credentials.username )))
-        auth_password: ((( alertmanager_admin_credentials.password )))
+        auth_users:
+          - name: ((( alertmanager_admin_credentials.username )))
+            password: ((( alertmanager_admin_credentials.password )))
     route_registrar:
       routes:
       - name: alertmanager
