@@ -32,6 +32,12 @@ releases:
 - name: node-exporter
   file: ((node_exporter_boshrelease_file))
   version: ((node_exporter_boshrelease_version))
+- name: create-uaa-client
+  file: ((create-uaa-client_boshrelease_file))
+  version: ((create-uaa-client_boshrelease_version))
+
+post_deploy_errands:
+- name: create-uaa-client
 
 variables:
 - name: prometheus_admin_credentials
@@ -62,10 +68,10 @@ form_types:
   property_inputs:
   - reference: ".prometheus.uaa_monitor_client_id"
     label: Monitor Client ID
-    description: BOSH UAA Monitor Client ID.
+    description: BOSH UAA Monitor Client ID (i.e. Credentials->BOSH Director->Health Monitor Credentials).
   - reference: ".prometheus.uaa_monitor_client_secret"
     label: Monitor Client Secret
-    description: BOSH UAA Monitor Client Secret.
+    description: BOSH UAA Monitor Client Secret (i.e. Credentials->BOSH Director->Health Monitor Credentials).
 
 job_types:
 - name: alertmanager
@@ -163,7 +169,7 @@ job_types:
     unique: false
     freeze_on_deploy: false
   - name: uaa_monitor_client_secret
-    type: string
+    type: secret
     configurable: true
     optional: false
     unique: false
@@ -616,6 +622,56 @@ job_types:
         client_id: (( ..cf.uaa.opentsdb_nozzle_credentials.identity ))
         client_secret: (( ..cf.uaa.opentsdb_nozzle_credentials.password ))
         url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
+
+- name: create-uaa-client
+  resource_label: Create UAA Client
+  description: Creates the grafana for PCF UAA Client. If disabled, the Grafana dashboard will not function properly.
+  errand: true
+  templates:
+  - name: create-uaa-client
+    release: create-uaa-client
+    consumes: 'cloud_controller: {from: cloud_controller, deployment: ((..cf.deployment_name))}'
+  resource_definitions:
+  - name: ram
+    type: integer
+    label: RAM
+    configurable: true
+    default: 2048
+  - name: ephemeral_disk
+    type: integer
+    label: Ephemeral Disk
+    configurable: true
+    default: 8192
+  - name: persistent_disk
+    type: integer
+    label: Persistent Disk
+    configurable: false
+    default: 0
+  - name: cpu
+    type: integer
+    label: CPU
+    configurable: true
+    default: 4
+  static_ip: 0
+  dynamic_ip: 1
+  max_in_flight: 1
+  single_az_only: true
+  instance_definition:
+    name: instances
+    type: integer
+    label: Instances
+    configurable: false
+    default: 1
+  manifest: |
+    ---
+    uaa:
+      grafana_client_id: "(( .grafana.uaa_clients_grafana.identity ))"
+      grafana_client_secret: "(( .grafana.uaa_clients_grafana.password ))"
+      admin_client_id: "(( ..cf.uaa.admin_client_credentials.identity ))"
+      admin_client_secret: "(( ..cf.uaa.admin_client_credentials.password ))"
+    cf:
+      sys_domain: "(( ..cf.cloud_controller.system_domain.value ))"
+      ssl_skip_cert_verify: "(( ..cf.ha_proxy.skip_cert_verify.value ))"
 
 update:
   canaries: 1

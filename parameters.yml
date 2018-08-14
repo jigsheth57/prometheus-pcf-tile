@@ -6,4 +6,6 @@ postgres_boshrelease_version: '28'
 postgres_boshrelease_file: postgres-release-28.tgz
 routing_boshrelease_version: '0.174.0'
 routing_boshrelease_file: cf-routing-release-0.174.0.tgz
+create-uaa-client_boshrelease_version: '1.0.1'
+create-uaa-client_boshrelease_file: create-uaa-client-1.0.1.tgz
 stemcell_version: '3586'
