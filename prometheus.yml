@@ -55,6 +55,18 @@ variables:
   options:
     length: 40
 
+form_types:
+- name: bosh_uaa_client
+  label: BOSH UAA Monitor Client
+  description: Configure BOSH UAA Monitor Client
+  property_inputs:
+  - reference: ".prometheus.uaa_monitor_client_id"
+    label: Monitor Client ID
+    description: BOSH UAA Monitor Client ID.
+  - reference: ".prometheus.uaa_monitor_client_secret"
+    label: Monitor Client Secret
+    description: BOSH UAA Monitor Client Secret.
+
 job_types:
 - name: alertmanager
   resource_label: Alert Manager
@@ -143,6 +155,19 @@ job_types:
       release: prometheus
     - name: cf_exporter
       release: prometheus
+  property_blueprints:
+  - name: uaa_monitor_client_id
+    type: string
+    configurable: true
+    optional: false
+    unique: false
+    freeze_on_deploy: false
+  - name: uaa_monitor_client_secret
+    type: string
+    configurable: true
+    optional: false
+    unique: false
+    freeze_on_deploy: false
   resource_definitions:
   - name: ram
     type: integer
@@ -286,8 +311,10 @@ job_types:
       bosh:
         uaa:
           url: https://(( $director.deployment_ip )):8443
-          client_id: (( ..p-bosh.director.health_monitor_credentials.identity ))
-          client_secret: (( ..p-bosh.director.health_monitor_credentials.password ))
+          # client_id: (( ..p-bosh.director.health_monitor_credentials.identity ))
+          # client_secret: (( ..p-bosh.director.health_monitor_credentials.password ))
+          client_id: (( uaa_monitor_client_id.value ))
+          client_secret: (( uaa_monitor_client_secret.value ))
         url: https://(( $director.deployment_ip )):25555
         ca_cert: (( $director.ca_public_key ))
         collectors: Deployments,Jobs,ServiceDiscovery
