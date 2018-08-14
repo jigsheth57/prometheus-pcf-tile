@@ -1,3 +1,4 @@
 releases/*
+!releases/create-uaa-client-1.0.1.tgz
 *.pivotal
 notes.txt
