@@ -621,7 +621,7 @@ job_types:
       doppler:
         max_retry_count: 300
         subscription_id: cf
-        url: wss://doppler.(( ..cf.cloud_controller.system_domain.value )):(( ..cf.properties.logger_endpoint_port.value || 443 ))
+        url: wss://doppler.(( ..cf.cloud_controller.system_domain.value )):(( ..cf.properties.logger_endpoint_port.value || "443" ))
       metrics:
         environment: cf
       skip_ssl_verify: true
