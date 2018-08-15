@@ -66,10 +66,10 @@ form_types:
   label: BOSH UAA Monitor Client
   description: Configure BOSH UAA Monitor Client
   property_inputs:
-  - reference: ".prometheus.uaa_monitor_client_id"
+  - reference: ".prometheus2.uaa_monitor_client_id"
     label: Monitor Client ID
     description: BOSH UAA Monitor Client ID (i.e. Credentials->BOSH Director->Health Monitor Credentials).
-  - reference: ".prometheus.uaa_monitor_client_secret"
+  - reference: ".prometheus2.uaa_monitor_client_secret"
     label: Monitor Client Secret
     description: BOSH UAA Monitor Client Secret (i.e. Credentials->BOSH Director->Health Monitor Credentials).
 
