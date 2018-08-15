@@ -223,88 +223,71 @@ job_types:
         - job_name: bosh
           scrape_interval: 2m
           scrape_timeout: 1m
+          static_configs:
+          - targets:
+            - localhost:9190
           file_sd_configs:
             - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
-          relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
-              regex: bosh_exporter
-              action: keep
-            - source_labels:
-              - __address__
-              regex: "(.*)"
-              target_label: __address__
-              replacement: "${1}:9190"
+              - /var/vcap/store/bosh_exporter/bosh_target_groups.json
         - job_name: cf
           scrape_interval: 4m
           scrape_timeout: 2m
           file_sd_configs:
             - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
+              - /var/vcap/store/bosh_exporter/bosh_target_groups.json
           relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
+            - source_labels: [__meta_bosh_job_process_name]
               regex: cf_exporter
               action: keep
-            - source_labels:
-              - __address__
+            - source_labels: [__address__]
               regex: "(.*)"
               target_label: __address__
               replacement: "${1}:9193"
         - job_name: firehose
           file_sd_configs:
             - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
+              - /var/vcap/store/bosh_exporter/bosh_target_groups.json
           relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
+            - source_labels: [__meta_bosh_job_process_name]
               regex: firehose_exporter
               action: keep
-            - source_labels:
-              - __address__
+            - source_labels: [__address__]
               regex: "(.*)"
               target_label: __address__
               replacement: "${1}:9186"
         - job_name: node
           file_sd_configs:
             - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
+              - /var/vcap/store/bosh_exporter/bosh_target_groups.json
           relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
+            - source_labels: [__meta_bosh_job_process_name]
               regex: node_exporter
               action: keep
-            - source_labels:
-              - __address__
+            - source_labels: [__address__]
               regex: "(.*)"
               target_label: __address__
               replacement: "${1}:9100"
         - job_name: postgres
           file_sd_configs:
             - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
+              - /var/vcap/store/bosh_exporter/bosh_target_groups.json
           relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
+            - source_labels: [__meta_bosh_job_process_name]
               regex: postgres_exporter
               action: keep
-            - source_labels:
-              - __address__
+            - source_labels: [__address__]
               regex: "(.*)"
               target_label: __address__
               replacement: "${1}:9187"
         - job_name: prometheus
           file_sd_configs:
             - files:
-              - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
+              - /var/vcap/store/bosh_exporter/bosh_target_groups.json
           relabel_configs:
-            - source_labels:
-              - __meta_bosh_job_process_name
+            - source_labels: [__meta_bosh_job_process_name]
               regex: prometheus\d?
               action: keep
-            - source_labels:
-              - __address__
+            - source_labels: [__address__]
               regex: "(.*)"
               target_label: __address__
               replacement: "${1}:9090"
@@ -682,7 +665,7 @@ job_types:
 
 update:
   canaries: 1
-  max_in_flight: 1
-  serial: false
   canary_watch_time: 1000-100000
+  max_in_flight: 32
+  serial: false
   update_watch_time: 1000-100000
