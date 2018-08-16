@@ -104,12 +104,17 @@ job_types:
         - job_name: bosh
           scrape_interval: 2m
           scrape_timeout: 1m
-          static_configs:
-          - targets:
-            - localhost:9190
           file_sd_configs:
             - files:
               - /var/vcap/store/bosh_exporter/bosh_target_groups.json
+          relabel_configs:
+            - source_labels: [__meta_bosh_job_process_name]
+              regex: bosh_exporter
+              action: keep
+            - source_labels: [__address__]
+              regex: "(.*)"
+              target_label: __address__
+              replacement: "${1}:9190"
         - job_name: cf
           scrape_interval: 4m
           scrape_timeout: 2m
@@ -172,6 +177,18 @@ job_types:
               regex: "(.*)"
               target_label: __address__
               replacement: "${1}:9090"
+        - job_name: p-rabbitmq
+          file_sd_configs:
+            - files:
+              - /var/vcap/store/bosh_exporter/bosh_target_groups.json
+          relabel_configs:
+            - source_labels: [__meta_bosh_job_process_name]
+              regex: rabbitmq_exporter
+              action: keep
+            - source_labels: [__address__]
+              regex: "(.*)"
+              target_label: __address__
+              replacement: "${1}:9125"
       web:
         external_url: https://prometheus.(( ..cf.cloud_controller.system_domain.value ))
     bosh_exporter:
@@ -196,6 +213,12 @@ job_types:
       metrics:
         environment: cf
       skip_ssl_verify: (( ..cf.ha_proxy.skip_cert_verify.value ))
+    rabbitmq_exporter:
+      rabbitmq:
+        url: https://pivotal-rabbitmq.(( ..cf.cloud_controller.system_domain.value ))
+        user: admin
+        password: (( ..cf-rabbitmq.rabbitmq-server.server_admin_credentials.password ))
+        skip_tls_verify: true
   max_in_flight: 1
   name: prometheus2
   property_blueprints:
