@@ -1,5 +1,5 @@
-prometheus_boshrelease_version: '23.1.0'
-prometheus_boshrelease_file: prometheus-23.1.0.tgz
+prometheus_boshrelease_version: '23.3.0'
+prometheus_boshrelease_file: prometheus-23.3.0.tgz
 node_exporter_boshrelease_version: '4.0.1'
 node_exporter_boshrelease_file: node-exporter-4.0.1.tgz
 postgres_boshrelease_version: '28'
@@ -8,4 +8,4 @@ routing_boshrelease_version: '0.174.0'
 routing_boshrelease_file: cf-routing-release-0.174.0.tgz
 create-uaa-client_boshrelease_version: '1.0.1'
 create-uaa-client_boshrelease_file: create-uaa-client-1.0.1.tgz
-stemcell_version: '3586'
+stemcell_version: '97'

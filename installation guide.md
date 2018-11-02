@@ -1,7 +1,7 @@
 # Installation Guide
 
-1. Download the prometheus tile from [here](https://s3.amazonaws.com/pcf-softwares-57/prometheus-23.1.0.pivotal).
-2. Upload it to Ops Manager. (Note. **ERT 2.2.+ needs to be installed**)
+1. Download the prometheus tile from [here](https://s3.amazonaws.com/pcf-softwares-57/prometheus-23.3.0.pivotal).
+2. Upload it to Ops Manager. (Note. **PAS 2.3.+ needs to be installed**)
 3. Add it and configure **AZ and Network Assignments**.
 4. Configure BOSH UAA Monitor Client (Note. you can use existing credentials from BOSH Director tile. i.e. Credentials->BOSH Director->Health Monitor Credentials)
 5. (optional) configure **Resource Config** if require

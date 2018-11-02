@@ -1,13 +1,13 @@
 ---
 name: prometheus
 product_version: ((prometheus_boshrelease_version))
-minimum_version_for_upgrade: 21.1.0
+minimum_version_for_upgrade: 23.1.0
 label: Prometheus
 description: Prometheus with Grafana to monitor PCF
 metadata_version: '2.2'
 service_broker: false
 stemcell_criteria:
-  os: ubuntu-trusty
+  os: ubuntu-xenial
   version: ((stemcell_version))
   enable_patch_security_updates: true
 requires_product_versions:
@@ -296,18 +296,6 @@ job_types:
               regex: "(.*)"
               target_label: __address__
               replacement: "${1}:9090"
-        - job_name: p-rabbitmq
-          file_sd_configs:
-            - files:
-              - /var/vcap/store/bosh_exporter/bosh_target_groups.json
-          relabel_configs:
-            - source_labels: [__meta_bosh_job_process_name]
-              regex: rabbitmq_exporter
-              action: keep
-            - source_labels: [__address__]
-              regex: "(.*)"
-              target_label: __address__
-              replacement: "${1}:9125"
       web:
         external_url: https://prometheus.(( ..cf.cloud_controller.system_domain.value ))
     bosh_exporter:
@@ -332,12 +320,6 @@ job_types:
       metrics:
         environment: cf
       skip_ssl_verify: (( ..cf.ha_proxy.skip_cert_verify.value ))
-    rabbitmq_exporter:
-      rabbitmq:
-        url: https://pivotal-rabbitmq.(( ..cf.cloud_controller.system_domain.value ))
-        user: admin
-        password: (( ..cf-rabbitmq.rabbitmq-server.server_admin_credentials.password ))
-        skip_tls_verify: true
 
 - name: database
   resource_label: Postgres
@@ -580,7 +562,7 @@ job_types:
         - prometheus.(( ..cf.cloud_controller.system_domain.value ))
       - name: grafana
         port: 3000
-        registration_interval: 60s
+        registration_interval: 20s
         uris:
         - grafana.(( ..cf.cloud_controller.system_domain.value ))
 
